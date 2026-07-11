@@ -20,3 +20,17 @@ spring:
     open-in-view: false
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:change-me-please-change-me-please-32+}
+    expiration-ms: ${JWT_EXP_MS:3600000}
+
+logging:
+  level:
+    ru.netology.cloudservice: INFO
+    org.springframework.security: INFO
