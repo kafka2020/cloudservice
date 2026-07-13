@@ -8,9 +8,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.netology.cloudservice.dto.FileInfoResponse;
+import ru.netology.cloudservice.dto.RenameRequest;
 import ru.netology.cloudservice.entity.FileEntity;
 import ru.netology.cloudservice.service.FileService;
 
@@ -51,6 +53,14 @@ public class FileController {
                 .header(HttpHeaders.CONTENT_DISPOSITION,
                         "attachment; filename=\"" + entity.getFilename() + "\"")
                 .body(resource);
+    }
+
+    @PutMapping("/file")
+    public ResponseEntity<Void> rename(@AuthenticationPrincipal UserDetails user,
+                                       @RequestParam("filename") String filename,
+                                       @Valid @RequestBody RenameRequest request) {
+        fileService.rename(user.getUsername(), filename, request.name());
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/list")

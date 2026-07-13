@@ -62,6 +62,20 @@ public class FileService {
                 .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, 400, "File not found"));
     }
 
+    @Transactional
+    public void rename(String login, String filename, String newName) {
+        if (newName == null || newName.isBlank()) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, 400, "Error input data");
+        }
+        UserEntity user = requireUser(login);
+        FileEntity file = fileRepository.findByUserAndFilename(user, filename)
+                .orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, 400, "File not found"));
+        if (fileRepository.existsByUserAndFilename(user, newName)) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, 400, "File with the same name already exists");
+        }
+        file.setFilename(newName);
+    }
+
     @Transactional(readOnly = true)
     public List<FileInfoResponse> list(String login, Integer limit) {
         UserEntity user = requireUser(login);
