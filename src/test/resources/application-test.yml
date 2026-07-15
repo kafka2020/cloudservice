@@ -1,0 +1,10 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+app:
+  jwt:
+    secret: test-secret-test-secret-test-secret-32
+    expiration-ms: 600000
+  cors:
+    allowed-origins: http://localhost:8081
