@@ -16,6 +16,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/**
+ * Читает auth-token из заголовка (поддерживается также формат "Bearer xxx",
+ * именно так его отправляет фронт Нетологии), проверяет JWT и авторизует
+ * пользователя в Spring Security.
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -31,11 +36,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain chain) throws ServletException, IOException {
-        String token = request.getHeader(AUTH_HEADER);
-        if (token != null && !token.isBlank()
-                && SecurityContextHolder.getContext().getAuthentication() == null) {
+        String header = request.getHeader(AUTH_HEADER);
+        String token = stripBearer(header);
+
+        if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
-                if (!blacklist.isRevoked(token)) {
+                if (blacklist.isRevoked(token)) {
+                    log.debug("Token revoked");
+                } else {
                     String login = jwtService.extractLogin(token);
                     if (login != null) {
                         UserDetails ud = userDetailsService.loadUserByUsername(login);
@@ -50,5 +58,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
         }
         chain.doFilter(request, response);
+    }
+
+    private String stripBearer(String header) {
+        if (header == null || header.isBlank()) return null;
+        if (header.startsWith("Bearer ")) return header.substring(7).trim();
+        return header.trim();
     }
 }
