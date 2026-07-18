@@ -59,7 +59,7 @@ public class FileController {
     public ResponseEntity<Void> rename(@AuthenticationPrincipal UserDetails user,
                                        @RequestParam("filename") String filename,
                                        @Valid @RequestBody RenameRequest request) {
-        fileService.rename(user.getUsername(), filename, request.name());
+        fileService.rename(user.getUsername(), filename, request.filename());
         return ResponseEntity.ok().build();
     }
 

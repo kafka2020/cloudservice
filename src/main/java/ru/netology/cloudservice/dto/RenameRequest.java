@@ -1,5 +1,12 @@
 package ru.netology.cloudservice.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonAlias;
 
-public record RenameRequest(@NotBlank String name) { }
+/**
+ * Тело запроса переименования.
+ * Спецификация YAML описывает поле "name", но реальный фронт Нетологии
+ * (src/views/Home.vue) присылает поле "filename". Поддерживаем оба имени.
+ */
+public record RenameRequest(
+        @JsonAlias({"name", "filename"}) String filename
+) { }
