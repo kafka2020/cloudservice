@@ -86,4 +86,4 @@ databaseChangeLog:
                   value: user1
               - column:
                   name: password
-                  value: $2a$10$7E0a6VfWQfV9MwZ9jvR2VeQYFy0c1V8JtjPofZ1q2t2bqrGbQ0fS6
+                  value: $2a$10$K8g2CYjixcU2kjRbbWOOj.unj0bNcOqqCJpK4UTPb1op6y0SATELC

@@ -39,7 +39,6 @@ public class FileEntity {
      * данные в S3/файловой системе и держать в БД только метаданные,
      * но в учебных целях BLOB в Postgres достаточен.
      */
-    @Lob
     @Column(name = "data", nullable = false)
     private byte[] data;
 
